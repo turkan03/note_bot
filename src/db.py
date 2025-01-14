@@ -43,8 +43,17 @@ def initilizeDatabase():
 
   # Commit changes and close the connection
   conn.commit()
-  conn.close()
-
-
+  
 # Call the function to create tables
 initilizeDatabase()
+
+# Function to save user data into the table 
+def save_username(username):
+  conn = get_connection # Get the database connection
+  cursor = conn.cursor()
+
+  cursor.execute('''
+  INSERT INTO users(username)
+  VALUE(?)''', (username))
+  conn.commit()
+  conn.close()
