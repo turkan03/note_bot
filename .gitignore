@@ -1,2 +1,4 @@
 venv/
 .env
+my_data.db
+src/__pycache__/
