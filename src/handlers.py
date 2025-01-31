@@ -32,4 +32,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 start_handler = CommandHandler('start', start)
 application.add_handler(start_handler)
 
+
+
+# Creat function for /create command 
+async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  await context.bot.send_message(
+    chat_id= update.effective_chat.id,
+    text = "✍️ Please send the text for your new note.\n💡 Tip: Add a short title at the beginning of your note using ** ** to make it easier to find later.\nFor example: **Shopping List**: milk, bread, eggs.\n ✅ When you're done, use the /save command to save your note."
+  )
+
+
+creat_handler = CommandHandler('create', create)
+application.add_handler(creat_handler)
+
 application.run_polling()
