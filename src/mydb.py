@@ -31,21 +31,26 @@ try:
       FOREIGN KEY (category_id) REFERENCES categories(category_id)
       );
     ''')
-  
-    conn.commit()
-
-    # Add data in tables 
+    conn.commit() 
 except sqlite3.OperationalError as e:
   print("Failed to open database:", e)
 
+
+ # Add data in tables
 def user_value(value):
       with sqlite3.connect("my_data.db") as conn:
         cursor = conn.cursor()
         cursor.execute('''
-          INSERT INTO user(user_id)
-          VALUES (?) 
+          SELECT user_id FROM user WHERE user_id = ? 
         ''', (value,))
-        conn.commit()
+        existing_user = cursor.fetchone()
+
+        if existing_user is None:
+           cursor.execute('''
+            INSERT INTO user(user_id)
+            VALUES (?)
+           ''', (value,))
+           conn.commit()
 
 
 
