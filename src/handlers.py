@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import logging 
 from telegram import Update
-from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
+from telegram.ext import Application, ContextTypes, CommandHandler, CallbackContext
 import mydb
 
 # Logging modules help know when (and why) things don't work as expected
@@ -13,17 +13,20 @@ logging.basicConfig(
 # Load environment variables
 load_dotenv()
 # Get the Telegram bot token from the .env file
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+TELEGRAM_KEY = os.getenv("TELEGRAM_TOKEN")
 # Create the bot application
-application = ApplicationBuilder().token(TELEGRAM_TOKEN).build() # type: ignore
+application = Application.builder().token(TELEGRAM_KEY).build() # type: ignore
 
+#Extract and returns the user ID
+def get_user_id(update: Update, context: CallbackContext):
+  return update.effective_user.id
 
 # Creat function for /start commant 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-  user_id_name = update.effective_user.id # type: ignore
   user_first_name = update.effective_user.first_name # type: ignore # Get the user's first name
-  mydb.user_value(user_id_name)
-    
+  # here is after user send command /start takes user_id and put it in database
+  user_id = get_user_id(update, context)
+  mydb.user_value(user_id)
   await context.bot.send_message(
     chat_id = update.effective_chat.id, # type: ignore
     text = f"Hello {user_first_name}! 👋\nI'm your personal note assistant. Here's what I can help you with:\n\n📝 *Create a New Note*\nSend me anything you'd like to save as a note, and I'll store it for you.\n\n🔍 *Search Your Notes*\nYou can browse by categories or search through your save notes.\n\n Choose an option:\n1️⃣ Type /create to starting creat new note.\n2️⃣ Use /categories to explore and search existing notes.\n\n💡 Tip: Organize your notes into categories to find them easily later!"
@@ -34,15 +37,6 @@ application.add_handler(start_handler)
 
 
 
-# Creat function for /create command 
-async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
-  await context.bot.send_message(
-    chat_id= update.effective_chat.id,
-    text = "✍️ Please send the text for your new note.\n💡 Tip: Add a short title at the beginning of your note using ** ** to make it easier to find later.\nFor example: **Shopping List**: milk, bread, eggs.\n ✅ When you're done, use the /save command to save your note."
-  )
 
-
-creat_handler = CommandHandler('create', create)
-application.add_handler(creat_handler)
 
 application.run_polling()
