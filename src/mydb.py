@@ -6,29 +6,20 @@ try:
     cursor = conn.cursor()
     # Creat tables for database
     cursor.execute('''
-      CREATE TABLE IF NOT EXISTS user(
-        user_id TEXT NOT NULL
-      );
-    ''')
-
-    cursor.execute('''
-      CREATE TABLE IF NOT EXISTS categories(
-        category_id INTEGER PRIMARY KEY,
-        category_name TEXT NOT NULL,
-        user_id TEXT NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES user(user_id) 
+      CREATE TABLE IF NOT EXISTS users(
+        user_id INTEGER PRIMARY KEY,
+        user INTEGER NOT NULL UNIQUE
       );
     ''')
 
     cursor.execute('''
       CREATE TABLE IF NOT EXISTS notes(
-      note_id INTEGER PRIMARY KEY,
-      note_title TEXT NOT NULL,
-      note_content TEXT,
-      user_id TEXT NOT NULL,
-      category_id INTEGER,
-      FOREIGN KEY (user_id) REFERENCES user(user_id),
-      FOREIGN KEY (category_id) REFERENCES categories(category_id)
+        note_id INTEGER PRIMARY KEY,
+        user_id INTEGER,
+        note_title TEXT NOT NULL,
+        note_content TEXT NOT NULL,
+        category_name TEXT,
+        FOREIGN KEY (user_id) REFERENCES user(user_id) 
       );
     ''')
     conn.commit() 
