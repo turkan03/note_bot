@@ -11,7 +11,6 @@ try:
         user INTEGER NOT NULL UNIQUE
       );
     ''')
-
     cursor.execute('''
       CREATE TABLE IF NOT EXISTS notes(
         note_id INTEGER PRIMARY KEY,
@@ -29,19 +28,19 @@ except sqlite3.OperationalError as e:
 
  # Add data in tables
 def user_value(value):
-      with sqlite3.connect("my_data.db") as conn:
-        cursor = conn.cursor()
-        cursor.execute('''
-          SELECT user_id FROM user WHERE user_id = ? 
-        ''', (value,))
-        existing_user = cursor.fetchone()
-
-        if existing_user is None:
-           cursor.execute('''
-            INSERT INTO user(user_id)
+   with sqlite3.connect("my_data.db") as conn:
+    cursor = conn.cursor()
+    cursor.execute('''
+            INSERT INTO users(user)
             VALUES (?)
-           ''', (value,))
-           conn.commit()
-
+           ''', (value))
+    conn.commit()
+        
+def notes(title,content, category):
+   with sqlite3.connect("my_data.db") as conn:
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSER INTO notes(note_title,note_content,category_name) 
+        VALUE(?,?,?)''', (title,content,category))
 
 
