@@ -42,5 +42,6 @@ def notes(title,content, category):
     cursor.execute('''
         INSER INTO notes(note_title,note_content,category_name) 
         VALUE(?,?,?)''', (title,content,category))
+    conn.commit()
 
 
