@@ -69,7 +69,7 @@ async def get_note(update: Update, context: ContextTypes.DEFAULT_TYPE):
   note_category = context.user_data['category']
 
   # # Save data in database
-  # mydb.notes(note_title, note, note_category)
+  mydb.notes(note_title, note, note_category)
   
   # Conficmation message
   await update.message.reply_text(f"Your note was saved.\nTitle: {note_title}\nCategory: {note_category}\nNote: {note}\n\nYou can look to your notes sending /category")

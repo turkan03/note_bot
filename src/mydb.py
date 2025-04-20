@@ -31,17 +31,17 @@ def user_value(value):
    with sqlite3.connect("my_data.db") as conn:
     cursor = conn.cursor()
     cursor.execute('''
-            INSERT INTO users(user)
+            INSERT OR IGNORE INTO users(user)
             VALUES (?)
-           ''', (value))
+           ''', (value,))
     conn.commit()
         
 def notes(title,content, category):
    with sqlite3.connect("my_data.db") as conn:
     cursor = conn.cursor()
     cursor.execute('''
-        INSER INTO notes(note_title,note_content,category_name) 
-        VALUE(?,?,?)''', (title,content,category))
+        INSERT INTO notes(note_title,note_content,category_name) 
+        VALUES (?,?,?)''', (title, content, category,))
     conn.commit()
 
 
