@@ -2,3 +2,4 @@ venv/
 .env
 my_data.db
 src/__pycache__/
+.DS_Store
