@@ -64,12 +64,13 @@ async def get_note(update: Update, context: ContextTypes.DEFAULT_TYPE):
   context.user_data['user_id'] = update.effective_user.id
 
   # Process the note
+  user_id = context.user_data["user_id"]
   note = context.user_data['note']
   note_title = context.user_data['title']
   note_category = context.user_data['category']
 
-  # # Save data in database
-  mydb.notes(note_title, note, note_category)
+  # Save data in database
+  mydb.notes(note_title, note, note_category, user_id)
   
   # Conficmation message
   await update.message.reply_text(f"Your note was saved.\nTitle: {note_title}\nCategory: {note_category}\nNote: {note}\n\nYou can look to your notes sending /category")
@@ -86,5 +87,24 @@ conv_handler = ConversationHandler(
     fallbacks=[],
 )
 application.add_handler(conv_handler)
+
+
+# Creat function for /category command
+async def category (update: Update, context: ContextTypes.DEFAULT_TYPE):
+  user_id = update.effective_user.id
+
+  user_categories = mydb.categories(user_id)
+
+  if not user_categories:
+    await update.message.reply_text("☹️You don't have any saved categories yet.")
+  # Extract and format
+  categories = [row[0] for row in user_categories]
+  formatted = "\n".join(f"📁 {cat}" for cat in categories)
+
+  await update.message.reply_text(f"Your categories:\n {formatted}")
+
+
+category_handler = CommandHandler('category', category)
+application.add_handler(category_handler)
 
 application.run_polling()
