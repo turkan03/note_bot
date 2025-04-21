@@ -36,12 +36,22 @@ def user_value(value):
            ''', (value,))
     conn.commit()
         
-def notes(title,content, category):
+def notes(title,content, category, user_id):
    with sqlite3.connect("my_data.db") as conn:
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO notes(note_title,note_content,category_name) 
-        VALUES (?,?,?)''', (title, content, category,))
+        INSERT INTO notes(note_title,note_content,category_name, user_id) 
+        VALUES (?,?,?,?)''', (title, content, category, user_id,))
     conn.commit()
 
 
+# Sekect distinct categories for user
+
+def categories(user_id):
+  with sqlite3.connect("my_data.db") as conn:
+    cursor = conn.cursor()
+    cursor.execute('''
+       SELECT DISTINCT category_name FROM notes WHERE user_id = ?''', (user_id,))
+    rows = cursor.fetchall()
+    return rows
+  conn.commit()
